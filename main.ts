@@ -4,43 +4,44 @@ import { Plugin, TAbstractFile, TFile } from 'obsidian';
 export default class DenoteRenamer extends Plugin {
 	async onload(): Promise<void> {
 		this.registerEvent(
-			this.app.vault.on('modify', async (file: TAbstractFile) => {
-				if (!this.isTFile(file)) return;
-
-				await this.app.fileManager.processFrontMatter(
-					file,
-					async (frontmater: {
-						title: string;
-						tags: string[];
-						createdAt: string;
-						updatedAt: string;
-					}) => {
-						const excludeDirectories = '4-archives/templates/obsidian';
-						if (file.parent?.path === excludeDirectories) {
-							return;
-						}
-
-						if (Object.entries(frontmater).length === 0) return;
-
-						const renamedFile = this.getRenamedFilename({
-							fileExtension: file.extension,
-							fileBasename: frontmater.title,
-							tags: frontmater.tags,
-							timestamp: file.stat.ctime,
-						});
-
-						// TODO: Notifies, parent is possibly null
-						await this.app.fileManager.renameFile(
-							file,
-							`${file.parent?.path}/${renamedFile}`,
-						);
-					},
-				);
-			}),
+			this.app.vault.on('modify', this.onModifyUsingDenoteNotation)
 		);
 	}
 
-	isTFile(value: TAbstractFile): value is TFile {
+	private async onModifyUsingDenoteNotation(
+		file: TAbstractFile
+	): Promise<void> {
+		if (!this.isTFile(file)) return;
+
+		await this.app.fileManager.processFrontMatter(
+			file,
+			async (frontmater: {
+				title: string;
+				tags: string[];
+				createdAt: string;
+				updatedAt: string;
+			}) => {
+				const excludeDirectories = '4-archives/templates/obsidian';
+				if (file.parent?.path === excludeDirectories) {
+					return;
+				}
+
+				if (Object.entries(frontmater).length === 0) return;
+
+				const renamedFile = this.getRenamedFilename({
+					fileBasename: frontmater.title,
+					fileExtension: file.extension,
+					tags: frontmater.tags,
+					timestamp: file.stat.ctime,
+				});
+
+				const newPath = `${file.parent?.path}/${renamedFile}`;
+
+				await this.app.fileManager.renameFile(file, newPath);
+			}
+		);
+	}
+
 	private isTFile(value: TAbstractFile): value is TFile {
 		return 'stat' in value;
 	}
