@@ -41,10 +41,11 @@ export default class DenoteRenamer extends Plugin {
 	}
 
 	isTFile(value: TAbstractFile): value is TFile {
+	private isTFile(value: TAbstractFile): value is TFile {
 		return 'stat' in value;
 	}
 
-	getRenamedFilename(payload: {
+	private getRenamedFilename(payload: {
 		timestamp: number;
 		tags: string[] | string;
 		fileBasename: string;
@@ -52,14 +53,14 @@ export default class DenoteRenamer extends Plugin {
 	}): string {
 		const slug = format(new Date(payload.timestamp), 'YYYYMMDDThhmmss');
 		const formattedFilename = this.formatToKebabCase(
-			String(payload.fileBasename),
+			String(payload.fileBasename)
 		);
 		const formattedTags = this.getFormatedTags(payload.tags);
 
 		return `${slug}--${formattedFilename}${formattedTags}.${payload.fileExtension}`;
 	}
 
-	formatToKebabCase(payload: string): string {
+	private formatToKebabCase(payload: string): string {
 		return payload
 			.replace(/([a-z])([A-Z])/g, '$1-$2')
 			.replace(/[\s_]+/g, '-')
@@ -67,7 +68,7 @@ export default class DenoteRenamer extends Plugin {
 			.toLowerCase();
 	}
 
-	getFormatedTags(tags?: string[] | string): string {
+	private getFormatedTags(tags?: string[] | string): string {
 		switch (typeof tags) {
 			case 'undefined':
 				return '';
@@ -77,7 +78,9 @@ export default class DenoteRenamer extends Plugin {
 
 			case 'object':
 				if (Array.isArray(tags)) {
-					const formattedTags = tags.map((tag) => this.formatToKebabCase(tag));
+					const formattedTags = tags.map((tag) =>
+						this.formatToKebabCase(tag)
+					);
 
 					return `__${formattedTags.join('_')}`;
 				}
