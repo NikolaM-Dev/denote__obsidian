@@ -1,7 +1,7 @@
-.PHONY: all
+.PHONY: install
 
-all:
+install:
 	bun run build
-	mkdir -p $(SECOND_BRAIN_PATH)/.obsidian/plugins/denote-renamer
-	cp main.js $(SECOND_BRAIN_PATH)/.obsidian/plugins/denote-renamer
-	cp manifest.json $(SECOND_BRAIN_PATH)/.obsidian/plugins/denote-renamer
+	mkdir -p $(SECOND_BRAIN_PATH)/src/.obsidian/plugins/denote-renamer
+	cp main.js $(SECOND_BRAIN_PATH)/src/.obsidian/plugins/denote-renamer
+	cp manifest.json $(SECOND_BRAIN_PATH)/src/.obsidian/plugins/denote-renamer
