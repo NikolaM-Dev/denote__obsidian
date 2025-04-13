@@ -27,9 +27,7 @@ export default class DenoteRenamer extends Plugin {
 				updatedAt: string;
 			}) => {
 				const excludeDirectories = '4-archives/templates/obsidian';
-				if (file.parent?.path === excludeDirectories) {
-					return;
-				}
+				if (file.parent?.path === excludeDirectories) return;
 
 				if (Object.entries(frontmater).length === 0) return;
 
@@ -43,7 +41,7 @@ export default class DenoteRenamer extends Plugin {
 				const newPath = `${file.parent?.path}/${renamedFile}`;
 
 				await this.app.fileManager.renameFile(file, newPath);
-			}
+			},
 		);
 	}
 
@@ -59,7 +57,7 @@ export default class DenoteRenamer extends Plugin {
 	}): string {
 		const slug = format(new Date(payload.timestamp), 'YYYYMMDDThhmmss');
 		const formattedFilename = this.formatToKebabCase(
-			String(payload.fileBasename)
+			String(payload.fileBasename),
 		);
 		const formattedTags = this.getFormatedTags(payload.tags);
 
@@ -85,7 +83,7 @@ export default class DenoteRenamer extends Plugin {
 			case 'object':
 				if (Array.isArray(tags)) {
 					const formattedTags = tags.map((tag) =>
-						this.formatToKebabCase(tag)
+						this.formatToKebabCase(tag),
 					);
 
 					return `__${formattedTags.join('_')}`;
