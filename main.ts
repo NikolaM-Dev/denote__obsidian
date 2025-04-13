@@ -14,7 +14,7 @@ export default class DenoteRenamer extends Plugin {
 	}
 
 	private async onModifyUsingDenoteNotation(
-		file: TAbstractFile
+		file: TAbstractFile,
 	): Promise<void> {
 		if (!this.isTFile(file)) return;
 
