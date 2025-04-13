@@ -38,6 +38,8 @@ export default class DenoteRenamer extends Plugin {
 					timestamp: file.stat.ctime,
 				});
 
+				if (file.name === renamedFile) return;
+
 				const newPath = `${file.parent?.path}/${renamedFile}`;
 
 				await this.app.fileManager.renameFile(file, newPath);
