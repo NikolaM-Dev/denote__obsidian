@@ -83,7 +83,7 @@ export default class DenoteRenamer extends Plugin {
 				return `__${tags}`;
 
 			case 'object':
-				if (Array.isArray(tags)) {
+				if (Array.isArray(tags) && tags[0] !== null) {
 					const formattedTags = tags.map((tag) =>
 						this.formatToKebabCase(tag),
 					);
