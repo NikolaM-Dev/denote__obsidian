@@ -4,7 +4,12 @@ import { Plugin, TAbstractFile, TFile } from 'obsidian';
 export default class DenoteRenamer extends Plugin {
 	async onload(): Promise<void> {
 		this.registerEvent(
-			this.app.vault.on('modify', this.onModifyUsingDenoteNotation)
+			this.app.vault.on(
+				'modify',
+				async (file: TAbstractFile): Promise<void> => {
+					await this.onModifyUsingDenoteNotation(file);
+				},
+			),
 		);
 	}
 
