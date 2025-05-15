@@ -1,5 +1,13 @@
 import { Plugin, TAbstractFile, TFile } from 'obsidian';
 
+interface IFrontMatter {
+	createdAt: string;
+	id: string;
+	tags: string[];
+	title: string;
+	updatedAt: string;
+}
+
 export default class DenoteRenamer extends Plugin {
 	async onload(): Promise<void> {
 		const onModify = this.app.vault.on(
@@ -19,12 +27,7 @@ export default class DenoteRenamer extends Plugin {
 
 		await this.app.fileManager.processFrontMatter(
 			file,
-			async (frontmater: {
-				title: string;
-				tags: string[];
-				createdAt: string;
-				updatedAt: string;
-			}) => {
+			async (frontmater: IFrontMatter) => {
 				const excludeDirectories = '4-archives/templates/obsidian';
 				if (file.parent?.path === excludeDirectories) return;
 
@@ -33,6 +36,7 @@ export default class DenoteRenamer extends Plugin {
 				const renamedFile = this.getRenamedFilename({
 					fileBasename: frontmater.title,
 					fileExtension: file.extension,
+					id: frontmater.id,
 					tags: frontmater.tags,
 					timestamp: file.stat.ctime,
 				});
