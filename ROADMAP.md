@@ -3,10 +3,11 @@
 # 💡 Backlog
 
 - [ ] Sort tags.
-- [ ] Format tittle.
+- [ ] Format title.
 - [ ] Exclude directories settings.
 - [ ] Add id frontmatter fallback.
 - [ ] Add tags frontmatter fallback.
+- [ ] Auto rename title in base to the first H1.
 
 # ✅ Done
 
