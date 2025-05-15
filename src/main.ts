@@ -52,7 +52,7 @@ export default class DenoteRenamer extends Plugin {
 		const formattedFilename = this.formatToKebabCase(
 			String(payload.fileBasename),
 		);
-		const formattedTags = this.getFormatedTags(payload.tags);
+		const formattedTags = this.getFormattedTags(payload.tags);
 
 		return `${payload.id}--${formattedFilename}${formattedTags}.${payload.fileExtension}`;
 	}
@@ -66,6 +66,7 @@ export default class DenoteRenamer extends Plugin {
 	}
 
 	private getFormatedTags(tags?: string[] | string): string {
+	private getFormattedTags(tags: ITags): string {
 		switch (typeof tags) {
 			case 'undefined':
 				return '';
