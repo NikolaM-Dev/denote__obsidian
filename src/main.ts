@@ -1,12 +1,6 @@
 import { Plugin, TAbstractFile, TFile } from 'obsidian';
 
-interface IFrontMatter {
-	createdAt: string;
-	id: string;
-	tags: string[];
-	title: string;
-	updatedAt: string;
-}
+import { IFrontMatter, IRenameFilenamePayload, ITags } from './models';
 
 export default class DenoteRenamer extends Plugin {
 	async onload(): Promise<void> {
