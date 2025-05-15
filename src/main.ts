@@ -29,6 +29,7 @@ export default class DenoteRenamer extends Plugin {
 			file,
 			async (frontmater: IFrontMatter) => {
 				const excludeDirectories = '4-archives/templates/obsidian';
+
 				if (file.parent?.path === excludeDirectories) return;
 
 				if (Object.entries(frontmater).length === 0) return;
