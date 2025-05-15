@@ -2,7 +2,6 @@
 
 # 💡 Backlog
 
-- [ ] Improve `lower_kebab_case` function
 - [ ] Fix invalid title when change filename, exclude
     - `: / \ ( ) ! ?` using lower_kebab_case
 - [ ] Sort tags.
@@ -12,3 +11,4 @@
 # ✅ Done
 
 - [x] Refactor the code.
+- [x] Improve `lower_kebab_case` function
