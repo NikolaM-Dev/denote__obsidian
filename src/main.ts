@@ -28,12 +28,11 @@ export default class DenoteRenamer extends Plugin {
 
 				if (Object.entries(frontmater).length === 0) return;
 
+				// timestamp: file.stat.ctime,
 				const renamedFile = this.getRenamedFilename({
+					...frontmater,
 					fileBasename: frontmater.title,
 					fileExtension: file.extension,
-					id: frontmater.id,
-					tags: frontmater.tags,
-					timestamp: file.stat.ctime,
 				});
 
 				if (file.name === renamedFile) return;
@@ -49,19 +48,13 @@ export default class DenoteRenamer extends Plugin {
 		return 'stat' in value;
 	}
 
-	private getRenamedFilename(payload: {
-		timestamp: number;
-		tags: string[] | string;
-		fileBasename: string;
-		fileExtension: string;
-	}): string {
-		const slug = format(new Date(payload.timestamp), 'YYYYMMDDThhmmss');
+	private getRenamedFilename(payload: IRenameFilenamePayload): string {
 		const formattedFilename = this.formatToKebabCase(
 			String(payload.fileBasename),
 		);
 		const formattedTags = this.getFormatedTags(payload.tags);
 
-		return `${slug}--${formattedFilename}${formattedTags}.${payload.fileExtension}`;
+		return `${payload.id}--${formattedFilename}${formattedTags}.${payload.fileExtension}`;
 	}
 
 	private formatToKebabCase(payload: string): string {
