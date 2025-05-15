@@ -1,4 +1,3 @@
-import { format } from '@formkit/tempo';
 import { Plugin, TAbstractFile, TFile } from 'obsidian';
 
 export default class DenoteRenamer extends Plugin {
