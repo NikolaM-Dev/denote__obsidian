@@ -1,7 +1,7 @@
 import { Plugin, TAbstractFile, TFile } from 'obsidian';
 
 import { IFrontMatter, IRenameFilenamePayload, ITags } from './models';
-import { toLowerKebabCase } from './utils';
+import { toKebabCase } from './utils';
 
 export default class DenoteRenamer extends Plugin {
 	async onload(): Promise<void> {
@@ -50,9 +50,7 @@ export default class DenoteRenamer extends Plugin {
 	}
 
 	private getRenamedFilename(payload: IRenameFilenamePayload): string {
-		const formattedFilename = toLowerKebabCase(
-			String(payload.fileBasename),
-		);
+		const formattedFilename = toKebabCase(String(payload.fileBasename));
 		const formattedTags = this.getFormattedTags(payload.tags);
 
 		return `${payload.id}--${formattedFilename}${formattedTags}.${payload.fileExtension}`;
@@ -68,9 +66,7 @@ export default class DenoteRenamer extends Plugin {
 
 			case 'object':
 				if (Array.isArray(tags) && tags[0] !== null) {
-					const formattedTags = tags.map((tag) =>
-						toLowerKebabCase(tag),
-					);
+					const formattedTags = tags.map((tag) => toKebabCase(tag));
 
 					return `__${formattedTags.join('_')}`;
 				}
