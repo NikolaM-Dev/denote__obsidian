@@ -16,21 +16,16 @@ export default class DenoteRenamer extends Plugin {
 		this.registerEvent(onModify);
 	}
 
-	private async onFixFrontMatter(
-		file: TAbstractFile,
-	): Promise<void> {
+	private async onFixFrontMatter(file: TAbstractFile): Promise<void> {
 		if (!isTFile(file)) return;
 
-		const frontmatter = await getFrontMatter(file, this.app);
-
-		if (frontmatter === undefined) return;
-
-		const tags = sanatizeTags(frontmatter.tags);
+		const frontMatter = await getFrontMatter(file, this.app);
+		const tags = sanatizeTags(frontMatter.tags);
 
 		this.app.fileManager.processFrontMatter(
 			file,
-			(frontmatter: IFrontMatter) => {
-				frontmatter.tags = tags;
+			(frontMatter: IFrontMatter) => {
+				frontMatter.tags = tags;
 			},
 		);
 	}

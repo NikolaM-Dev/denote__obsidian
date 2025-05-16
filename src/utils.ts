@@ -82,17 +82,25 @@ export function isTFile(value: TAbstractFile): value is TFile {
 export async function getFrontMatter(
 	file: TFile,
 	app: App,
-): Promise<IFrontMatter | undefined> {
-	let frontmatter;
+): Promise<IFrontMatter> {
+	let _frontMatter: IFrontMatter = {
+		createdAt: null,
+		id: null,
+		tags: null,
+		title: null,
+		updatedAt: null,
+	};
 
 	await app.fileManager.processFrontMatter(
 		file,
-		async (_frontmater: IFrontMatter) => {
-			frontmatter = _frontmater;
+		async (frontMatter: IFrontMatter) => {
+			if (Object.entries(frontMatter).length === 0) return;
+
+			_frontMatter = frontMatter;
 		},
 	);
 
-	return frontmatter;
+	return _frontMatter;
 }
 
 export function trim(payload: string): string {

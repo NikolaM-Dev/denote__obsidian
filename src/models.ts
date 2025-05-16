@@ -1,11 +1,12 @@
-export type ITags = string[] | string | undefined | null;
+export type IFrontMatterProperty = string | undefined | null;
+export type ITags = string[] | IFrontMatterProperty;
 
 export interface IFrontMatter {
-	readonly createdAt: string;
-	readonly id: string;
-	readonly title: string;
-	readonly updatedAt: string;
+	readonly createdAt: IFrontMatterProperty;
+	readonly title: IFrontMatterProperty;
+	readonly updatedAt: IFrontMatterProperty;
 
+	id: IFrontMatterProperty;
 	tags: ITags;
 }
 
