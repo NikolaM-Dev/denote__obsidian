@@ -1,3 +1,7 @@
+import { App, TAbstractFile, TFile } from 'obsidian';
+
+import { IFrontMatter, ITags } from './models';
+
 export function toKebabCase(payload: string): string {
 	// Replace whitespace with hyphens
 	let result = payload.replace(/\s+/g, '-');
@@ -69,4 +73,71 @@ export function testToKebabCase() {
 			`${i + 1} ✅ | Expected ${testCase.expected} and Got ${got}`,
 		);
 	});
+}
+
+export function isTFile(value: TAbstractFile): value is TFile {
+	return 'stat' in value;
+}
+
+export async function getFrontMatter(
+	file: TFile,
+	app: App,
+): Promise<IFrontMatter | undefined> {
+	let frontmatter;
+
+	await app.fileManager.processFrontMatter(
+		file,
+		async (_frontmater: IFrontMatter) => {
+			frontmatter = _frontmater;
+		},
+	);
+
+	return frontmatter;
+}
+
+export function trim(payload: string): string {
+	return payload.replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
+}
+
+function sortTags(tags: string[]): string[] {
+	return tags.sort((a, b) => a.localeCompare(b));
+}
+
+export function sanatizeTags(tags: ITags): string[] {
+	const fallbackTags = ['action/pending'];
+	let verifiedTags = fallbackTags;
+
+	switch (typeof tags) {
+		case 'undefined':
+			// Explicity setting verifiedTags to use fallbackTags
+			verifiedTags = fallbackTags;
+			break;
+
+		case 'string':
+			// Change one single tag to array format
+			verifiedTags = [tags];
+			break;
+
+		case 'object':
+			// When tags is null, just use fallbackTags
+			if (tags === null) {
+				verifiedTags = fallbackTags;
+				break;
+			}
+
+			// Remove null tags
+			if (Array.isArray(tags)) {
+				verifiedTags = tags.filter((tag) => tag !== null);
+			}
+
+			// sanitaizedTags after filter is an empty array, use fallbackTags
+			if (verifiedTags.length === 0) verifiedTags = fallbackTags;
+
+			break;
+	}
+
+	const trimmedTags = verifiedTags.map((tag) => trim(tag));
+	const sortedTags = sortTags(trimmedTags);
+
+	return sortedTags;
 }
