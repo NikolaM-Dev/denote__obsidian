@@ -1,4 +1,4 @@
-import { Plugin, TAbstractFile } from 'obsidian';
+import { Plugin, TAbstractFile, TFile } from 'obsidian';
 
 import {
 	getFrontMatter,
@@ -15,16 +15,17 @@ export default class DenoteRenamer extends Plugin {
 		const onModify = this.app.vault.on(
 			'modify',
 			async (file: TAbstractFile): Promise<void> => {
+				if (!isTFile(file)) return;
+
 				await this.onSanitizeFrontMatter(file);
+				await this.onRenameFile(file);
 			},
 		);
 
 		this.registerEvent(onModify);
 	}
 
-	private async onSanitizeFrontMatter(file: TAbstractFile): Promise<void> {
-		if (!isTFile(file)) return;
-
+	private async onSanitizeFrontMatter(file: TFile): Promise<void> {
 		const frontMatter = await getFrontMatter(file, this.app);
 
 		const createdAt = sanitizeTimeStamp(file.stat.ctime);
@@ -45,62 +46,5 @@ export default class DenoteRenamer extends Plugin {
 		);
 	}
 
-	// private async onModifyUsingDenoteNotation(
-	// 	file: TAbstractFile,
-	// ): Promise<void> {
-	// 	if (!isTFile(file)) return;
-
-	// 	await this.app.fileManager.processFrontMatter(
-	// 		file,
-	// 		async (frontmater: IFrontMatter) => {
-	// 			const excludeDirectories = '4-archives/templates/obsidian';
-
-	// 			if (file.parent?.path === excludeDirectories) return;
-
-	// 			if (Object.entries(frontmater).length === 0) return;
-
-	// 			// timestamp: file.stat.ctime,
-	// 			const renamedFile = this.getRenamedFilename({
-	// 				...frontmater,
-	// 				fileBasename: frontmater.title,
-	// 				fileExtension: file.extension,
-	// 			});
-
-	// 			if (file.name === renamedFile) return;
-
-	// 			const newPath = `${file.parent?.path}/${renamedFile}`;
-
-	// 			await this.app.fileManager.renameFile(file, newPath);
-	// 		},
-	// 	);
-	// }
-
-	// private getRenamedFilename(payload: IRenameFilenamePayload): string {
-	// 	const formattedFilename = toKebabCase(String(payload.fileBasename));
-	// 	const formattedTags = this.getFormattedTags(payload.tags);
-
-	// 	return `${payload.id}--${formattedFilename}${formattedTags}.${payload.fileExtension}`;
-	// }
-
-	// private getFormattedTags(tags: ITags): string {
-	// 	switch (typeof tags) {
-	// 		case 'undefined':
-	// 			return '';
-
-	// 		case 'string':
-	// 			return `__${tags}`;
-
-	// 		case 'object':
-	// 			if (Array.isArray(tags) && tags[0] !== null) {
-	// 				const formattedTags = tags.map((tag) => toKebabCase(tag));
-
-	// 				return `__${formattedTags.join('_')}`;
-	// 			}
-
-	// 			return '';
-
-	// 		default:
-	// 			return '';
-	// 	}
-	// }
+	private async onRenameFile(file: TFile): Promise<void> {}
 }
