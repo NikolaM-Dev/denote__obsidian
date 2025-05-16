@@ -1,6 +1,7 @@
 import { Plugin, TAbstractFile, TFile } from 'obsidian';
 
 import {
+	toTitleCase,
 	getFrontMatter,
 	getNewFilename,
 	getSanitizedFrontMatter,
@@ -13,6 +14,8 @@ import {
 import { IFrontMatter } from './models';
 
 export default class DenoteRenamer extends Plugin {
+	private cachedHeadigns: Record<string, string> = {};
+
 	async onload(): Promise<void> {
 		const onModify = this.app.vault.on(
 			'modify',
@@ -20,6 +23,7 @@ export default class DenoteRenamer extends Plugin {
 				if (!isTFile(file)) return;
 
 				await this.onSanitizeFrontMatter(file);
+				await this.onFormatHeadings(file);
 				await this.onRenameFile(file);
 			},
 		);
@@ -46,6 +50,53 @@ export default class DenoteRenamer extends Plugin {
 				frontMatter.updatedAt = updatedAt;
 			},
 		);
+	}
+
+	private async onFormatHeadings(file: TFile): Promise<void> {
+		const cachedMetadata = this.app.metadataCache.getFileCache(file);
+		if (!cachedMetadata) return;
+
+		const headings = cachedMetadata.headings;
+		if (!headings) return;
+
+		const frontMatter = await getSanitizedFrontMatter(file, this.app);
+
+		const newHeadings = headings.map((heading) => {
+			return {
+				...heading,
+				newHeading: toTitleCase(heading.heading),
+			};
+		});
+		const formattedHeadings = newHeadings.map(
+			(heading) => heading.newHeading,
+		);
+
+		const rewriteHeadings = (): void => {
+			this.app.vault.process(file, (content: string): string => {
+				newHeadings.forEach((heading) => {
+					content = content.replace(
+						heading.heading,
+						heading.newHeading,
+					);
+				});
+
+				return content;
+			});
+
+			this.cachedHeadigns[frontMatter.id] = nextCachedHeadings;
+		};
+
+		const nextCachedHeadings = formattedHeadings.join();
+		const currentCachedHeadings = this.cachedHeadigns[frontMatter.id];
+
+		// If there is not cache
+		if (!currentCachedHeadings) rewriteHeadings();
+
+		// If headings in cache are the same
+		if (currentCachedHeadings === nextCachedHeadings) return;
+
+		// Otherwise
+		rewriteHeadings();
 	}
 
 	private async onRenameFile(file: TFile): Promise<void> {

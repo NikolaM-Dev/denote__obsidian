@@ -4,12 +4,12 @@
 
 - [ ] Auto rename title in base to the first H1.
 - [ ] Exclude directories settings.
-- [ ] Format every heading.
 
 # ✅ Done
 
 > ⏳ Order of the most recent finished to the oldest.
 
+- [x] Format every heading.
 - [x] Restore denote auto renaming.
 - [x] Sanitize createdAt and updatedAt.
 - [x] Refactor the code.

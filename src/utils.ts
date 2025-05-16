@@ -194,7 +194,7 @@ export function sanitizeId(
 	return verifiedId;
 }
 
-function formatTitle(title: string): string {
+export function toTitleCase(title: string): string {
 	const formattedTitle = trim(title).toLowerCase();
 
 	// Split the string into words
@@ -241,7 +241,7 @@ export function sanitizeTitle(title: IFrontMatterProperty): string {
 	switch (typeof title) {
 		// If string, this means that id already exits and verifies format
 		case 'string':
-			verifiedTitle = formatTitle(title);
+			verifiedTitle = toTitleCase(title);
 			break;
 
 		// In any other case use fallbackTitle
