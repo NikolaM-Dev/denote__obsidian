@@ -5,6 +5,7 @@ import {
 	isTFile,
 	sanitizeId,
 	sanitizeTags,
+	sanitizeTitle,
 	toKebabCase,
 } from './utils';
 import { IFrontMatter, IRenameFilenamePayload, ITags } from './models';
@@ -29,12 +30,14 @@ export default class DenoteRenamer extends Plugin {
 
 		const id = sanitizeId(file.stat.ctime, frontMatter.id);
 		const tags = sanitizeTags(frontMatter.tags);
+		const title = sanitizeTitle(frontMatter.title);
 
 		this.app.fileManager.processFrontMatter(
 			file,
 			(frontMatter: IFrontMatter) => {
 				frontMatter.id = id;
 				frontMatter.tags = tags;
+				frontMatter.title = title;
 			},
 		);
 	}

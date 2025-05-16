@@ -3,11 +3,11 @@ export type ITags = string[] | IFrontMatterProperty;
 
 export interface IFrontMatter {
 	readonly createdAt: IFrontMatterProperty;
-	readonly title: IFrontMatterProperty;
 	readonly updatedAt: IFrontMatterProperty;
 
 	id: IFrontMatterProperty;
 	tags: ITags;
+	title: IFrontMatterProperty;
 }
 
 export interface IRenameFilenamePayload {

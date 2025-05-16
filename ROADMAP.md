@@ -2,7 +2,6 @@
 
 # 💡 Backlog
 
-- [ ] Format title.
 - [ ] Exclude directories settings.
 - [ ] Auto rename title in base to the first H1.
 
@@ -16,3 +15,4 @@
 - [x] Sanitize Tags
 - [x] Add tags frontmatter fallback.
 - [x] Add id frontmatter fallback.
+- [x] Format title.
