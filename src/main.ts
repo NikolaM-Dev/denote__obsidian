@@ -9,6 +9,7 @@ export default class DenoteRenamer extends Plugin {
 			'modify',
 			async (file: TAbstractFile): Promise<void> => {
 				await this.onFixFrontMatter(file);
+				// await this.onModifyUsingDenoteNotation(file);
 			},
 		);
 
@@ -37,7 +38,7 @@ export default class DenoteRenamer extends Plugin {
 	private async onModifyUsingDenoteNotation(
 		file: TAbstractFile,
 	): Promise<void> {
-		if (!this.isTFile(file)) return;
+		if (!isTFile(file)) return;
 
 		await this.app.fileManager.processFrontMatter(
 			file,
@@ -62,10 +63,6 @@ export default class DenoteRenamer extends Plugin {
 				await this.app.fileManager.renameFile(file, newPath);
 			},
 		);
-	}
-
-	private isTFile(value: TAbstractFile): value is TFile {
-		return 'stat' in value;
 	}
 
 	private getRenamedFilename(payload: IRenameFilenamePayload): string {
