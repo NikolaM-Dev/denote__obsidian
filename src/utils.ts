@@ -1,6 +1,7 @@
 import { App, TAbstractFile, TFile } from 'obsidian';
+import { format } from '@formkit/tempo';
 
-import { IFrontMatter, ITags } from './models';
+import { IFrontMatter, IFrontMatterProperty, ITags } from './models';
 
 export function toKebabCase(payload: string): string {
 	// Replace whitespace with hyphens
@@ -148,4 +149,28 @@ export function sanatizeTags(tags: ITags): string[] {
 	const sortedTags = sortTags(trimmedTags);
 
 	return sortedTags;
+}
+
+export function sanatizeId(
+	fileCreationTime: number,
+	id: IFrontMatterProperty,
+): string {
+	const fallbackId = format(new Date(fileCreationTime), 'YYYYMMDDThhmmss');
+	let sanatizedId = 'INVALID';
+
+	switch (typeof id) {
+		// If string, this means that id already exits, just skip
+		case 'string':
+			sanatizedId = trim(id);
+			break;
+
+		// In any other case use fallbackId
+		default:
+			sanatizedId = fallbackId;
+	}
+
+	if (sanatizedId === 'INVALID')
+		throw new Error("Id wasn't sanatize properly");
+
+	return sanatizedId;
 }

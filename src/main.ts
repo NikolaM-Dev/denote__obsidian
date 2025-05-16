@@ -1,6 +1,12 @@
 import { Plugin, TAbstractFile } from 'obsidian';
 
-import { getFrontMatter, isTFile, sanatizeTags, toKebabCase } from './utils';
+import {
+	getFrontMatter,
+	isTFile,
+	sanatizeId,
+	sanatizeTags,
+	toKebabCase,
+} from './utils';
 import { IFrontMatter, IRenameFilenamePayload, ITags } from './models';
 
 export default class DenoteRenamer extends Plugin {
@@ -20,11 +26,14 @@ export default class DenoteRenamer extends Plugin {
 		if (!isTFile(file)) return;
 
 		const frontMatter = await getFrontMatter(file, this.app);
+
+		const id = sanatizeId(file.stat.ctime, frontMatter.id);
 		const tags = sanatizeTags(frontMatter.tags);
 
 		this.app.fileManager.processFrontMatter(
 			file,
 			(frontMatter: IFrontMatter) => {
+				frontMatter.id = id;
 				frontMatter.tags = tags;
 			},
 		);

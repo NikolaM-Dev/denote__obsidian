@@ -4,7 +4,6 @@
 
 - [ ] Format title.
 - [ ] Exclude directories settings.
-- [ ] Add id frontmatter fallback.
 - [ ] Auto rename title in base to the first H1.
 
 # ✅ Done
@@ -16,3 +15,4 @@
 - [x] Sort tags.
 - [x] Sanitize Tags
 - [x] Add tags frontmatter fallback.
+- [x] Add id frontmatter fallback.
