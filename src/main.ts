@@ -1,18 +1,37 @@
-import { Plugin, TAbstractFile, TFile } from 'obsidian';
+import { Plugin, TAbstractFile } from 'obsidian';
 
+import { getFrontMatter, isTFile, sanatizeTags, toKebabCase } from './utils';
 import { IFrontMatter, IRenameFilenamePayload, ITags } from './models';
-import { toKebabCase } from './utils';
 
 export default class DenoteRenamer extends Plugin {
 	async onload(): Promise<void> {
 		const onModify = this.app.vault.on(
 			'modify',
 			async (file: TAbstractFile): Promise<void> => {
-				this.onModifyUsingDenoteNotation(file);
+				await this.onFixFrontMatter(file);
 			},
 		);
 
 		this.registerEvent(onModify);
+	}
+
+	private async onFixFrontMatter(
+		file: TAbstractFile,
+	): Promise<void> {
+		if (!isTFile(file)) return;
+
+		const frontmatter = await getFrontMatter(file, this.app);
+
+		if (frontmatter === undefined) return;
+
+		const tags = sanatizeTags(frontmatter.tags);
+
+		this.app.fileManager.processFrontMatter(
+			file,
+			(frontmatter: IFrontMatter) => {
+				frontmatter.tags = tags;
+			},
+		);
 	}
 
 	private async onModifyUsingDenoteNotation(
