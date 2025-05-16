@@ -3,6 +3,8 @@ import { format } from '@formkit/tempo';
 
 import { IFrontMatter, IFrontMatterProperty, ITags } from './models';
 
+const INVALID = 'INVALID';
+
 export function toKebabCase(payload: string): string {
 	// Replace whitespace with hyphens
 	let result = payload.replace(/\s+/g, '-');
@@ -112,7 +114,7 @@ function sortTags(tags: string[]): string[] {
 	return tags.sort((a, b) => a.localeCompare(b));
 }
 
-export function sanatizeTags(tags: ITags): string[] {
+export function sanitizeTags(tags: ITags): string[] {
 	const fallbackTags = ['action/pending'];
 	let verifiedTags = fallbackTags;
 
@@ -151,26 +153,26 @@ export function sanatizeTags(tags: ITags): string[] {
 	return sortedTags;
 }
 
-export function sanatizeId(
+export function sanitizeId(
 	fileCreationTime: number,
 	id: IFrontMatterProperty,
 ): string {
 	const fallbackId = format(new Date(fileCreationTime), 'YYYYMMDDThhmmss');
-	let sanatizedId = 'INVALID';
+	let verifiedId = INVALID;
 
 	switch (typeof id) {
 		// If string, this means that id already exits, just skip
 		case 'string':
-			sanatizedId = trim(id);
+			verifiedId = trim(id);
 			break;
 
 		// In any other case use fallbackId
 		default:
-			sanatizedId = fallbackId;
+			verifiedId = fallbackId;
 	}
 
-	if (sanatizedId === 'INVALID')
-		throw new Error("Id wasn't sanatize properly");
+	if (verifiedId === INVALID)
+		throw new Error("FRONTMATTER: id property wasn't sanitized properly");
 
-	return sanatizedId;
+	return verifiedId;
 }

@@ -3,8 +3,8 @@ import { Plugin, TAbstractFile } from 'obsidian';
 import {
 	getFrontMatter,
 	isTFile,
-	sanatizeId,
-	sanatizeTags,
+	sanitizeId,
+	sanitizeTags,
 	toKebabCase,
 } from './utils';
 import { IFrontMatter, IRenameFilenamePayload, ITags } from './models';
@@ -27,8 +27,8 @@ export default class DenoteRenamer extends Plugin {
 
 		const frontMatter = await getFrontMatter(file, this.app);
 
-		const id = sanatizeId(file.stat.ctime, frontMatter.id);
-		const tags = sanatizeTags(frontMatter.tags);
+		const id = sanitizeId(file.stat.ctime, frontMatter.id);
+		const tags = sanitizeTags(frontMatter.tags);
 
 		this.app.fileManager.processFrontMatter(
 			file,
