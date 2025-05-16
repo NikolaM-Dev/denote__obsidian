@@ -1,11 +1,12 @@
-export type ITags = string[] | string | undefined;
+export type ITags = string[] | string | undefined | null;
 
 export interface IFrontMatter {
 	readonly createdAt: string;
 	readonly id: string;
-	readonly tags: ITags;
 	readonly title: string;
 	readonly updatedAt: string;
+
+	tags: ITags;
 }
 
 export interface IRenameFilenamePayload {
