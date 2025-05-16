@@ -154,8 +154,8 @@ export function sanitizeTags(tags: ITags): string[] {
 }
 
 export function sanitizeId(
-	fileCreationTime: number,
 	id: IFrontMatterProperty,
+	fileCreationTime: number,
 ): string {
 	const fallbackId = format(new Date(fileCreationTime), 'YYYYMMDDThhmmss');
 	let verifiedId = INVALID;
@@ -233,4 +233,25 @@ export function sanitizeTitle(title: IFrontMatterProperty): string {
 	}
 
 	return verifiedTitle;
+}
+
+export function sanitizeTimeStamp(timestamp: number): string {
+	return format(new Date(timestamp), 'YYYY-MM-DD, hh:mm:ss');
+}
+
+export function sanitizeCreatedAt(
+	createdAt: IFrontMatterProperty,
+	timestamp: number,
+): string {
+	const timestampFormat = 'YYYY-MM-DD, hh:mm:ss';
+	const fallback = format(new Date(timestamp), timestampFormat);
+
+	// If createdAt doesn't exists use fallback
+	if (typeof createdAt !== 'string') return fallback;
+
+	// If createdAt has an invalid format use fallback
+	if (createdAt.length !== timestampFormat.length) return fallback;
+
+	// Otherwise use current createdAt
+	return createdAt;
 }

@@ -2,7 +2,6 @@
 
 # 💡 Backlog
 
-- [ ] createdAt and updatedAt.
 - [ ] Auto rename title in base to the first H1.
 - [ ] Exclude directories settings.
 - [ ] Format every heading.
@@ -11,6 +10,7 @@
 
 > ⏳ Order of the most recent finished to the oldest.
 
+- [x] Sanitize createdAt and updatedAt.
 - [x] Refactor the code.
 - [x] Format title.
 - [x] Add id frontmatter fallback.

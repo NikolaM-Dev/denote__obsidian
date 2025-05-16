@@ -5,6 +5,7 @@ import {
 	isTFile,
 	sanitizeId,
 	sanitizeTags,
+	sanitizeTimeStamp,
 	sanitizeTitle,
 } from './utils';
 import { IFrontMatter } from './models';
@@ -26,16 +27,20 @@ export default class DenoteRenamer extends Plugin {
 
 		const frontMatter = await getFrontMatter(file, this.app);
 
-		const id = sanitizeId(file.stat.ctime, frontMatter.id);
+		const createdAt = sanitizeTimeStamp(file.stat.ctime);
+		const id = sanitizeId(frontMatter.id, file.stat.ctime);
 		const tags = sanitizeTags(frontMatter.tags);
 		const title = sanitizeTitle(frontMatter.title);
+		const updatedAt = sanitizeTimeStamp(file.stat.mtime);
 
 		this.app.fileManager.processFrontMatter(
 			file,
 			(frontMatter: IFrontMatter) => {
+				frontMatter.createdAt = createdAt;
 				frontMatter.id = id;
 				frontMatter.tags = tags;
 				frontMatter.title = title;
+				frontMatter.updatedAt = updatedAt;
 			},
 		);
 	}
