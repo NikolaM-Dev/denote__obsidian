@@ -6,24 +6,22 @@ import {
 	sanitizeId,
 	sanitizeTags,
 	sanitizeTitle,
-	toKebabCase,
 } from './utils';
-import { IFrontMatter, IRenameFilenamePayload, ITags } from './models';
+import { IFrontMatter } from './models';
 
 export default class DenoteRenamer extends Plugin {
 	async onload(): Promise<void> {
 		const onModify = this.app.vault.on(
 			'modify',
 			async (file: TAbstractFile): Promise<void> => {
-				await this.onFixFrontMatter(file);
-				// await this.onModifyUsingDenoteNotation(file);
+				await this.onSanitizeFrontMatter(file);
 			},
 		);
 
 		this.registerEvent(onModify);
 	}
 
-	private async onFixFrontMatter(file: TAbstractFile): Promise<void> {
+	private async onSanitizeFrontMatter(file: TAbstractFile): Promise<void> {
 		if (!isTFile(file)) return;
 
 		const frontMatter = await getFrontMatter(file, this.app);
@@ -42,62 +40,62 @@ export default class DenoteRenamer extends Plugin {
 		);
 	}
 
-	private async onModifyUsingDenoteNotation(
-		file: TAbstractFile,
-	): Promise<void> {
-		if (!isTFile(file)) return;
+	// private async onModifyUsingDenoteNotation(
+	// 	file: TAbstractFile,
+	// ): Promise<void> {
+	// 	if (!isTFile(file)) return;
 
-		await this.app.fileManager.processFrontMatter(
-			file,
-			async (frontmater: IFrontMatter) => {
-				const excludeDirectories = '4-archives/templates/obsidian';
+	// 	await this.app.fileManager.processFrontMatter(
+	// 		file,
+	// 		async (frontmater: IFrontMatter) => {
+	// 			const excludeDirectories = '4-archives/templates/obsidian';
 
-				if (file.parent?.path === excludeDirectories) return;
+	// 			if (file.parent?.path === excludeDirectories) return;
 
-				if (Object.entries(frontmater).length === 0) return;
+	// 			if (Object.entries(frontmater).length === 0) return;
 
-				// timestamp: file.stat.ctime,
-				const renamedFile = this.getRenamedFilename({
-					...frontmater,
-					fileBasename: frontmater.title,
-					fileExtension: file.extension,
-				});
+	// 			// timestamp: file.stat.ctime,
+	// 			const renamedFile = this.getRenamedFilename({
+	// 				...frontmater,
+	// 				fileBasename: frontmater.title,
+	// 				fileExtension: file.extension,
+	// 			});
 
-				if (file.name === renamedFile) return;
+	// 			if (file.name === renamedFile) return;
 
-				const newPath = `${file.parent?.path}/${renamedFile}`;
+	// 			const newPath = `${file.parent?.path}/${renamedFile}`;
 
-				await this.app.fileManager.renameFile(file, newPath);
-			},
-		);
-	}
+	// 			await this.app.fileManager.renameFile(file, newPath);
+	// 		},
+	// 	);
+	// }
 
-	private getRenamedFilename(payload: IRenameFilenamePayload): string {
-		const formattedFilename = toKebabCase(String(payload.fileBasename));
-		const formattedTags = this.getFormattedTags(payload.tags);
+	// private getRenamedFilename(payload: IRenameFilenamePayload): string {
+	// 	const formattedFilename = toKebabCase(String(payload.fileBasename));
+	// 	const formattedTags = this.getFormattedTags(payload.tags);
 
-		return `${payload.id}--${formattedFilename}${formattedTags}.${payload.fileExtension}`;
-	}
+	// 	return `${payload.id}--${formattedFilename}${formattedTags}.${payload.fileExtension}`;
+	// }
 
-	private getFormattedTags(tags: ITags): string {
-		switch (typeof tags) {
-			case 'undefined':
-				return '';
+	// private getFormattedTags(tags: ITags): string {
+	// 	switch (typeof tags) {
+	// 		case 'undefined':
+	// 			return '';
 
-			case 'string':
-				return `__${tags}`;
+	// 		case 'string':
+	// 			return `__${tags}`;
 
-			case 'object':
-				if (Array.isArray(tags) && tags[0] !== null) {
-					const formattedTags = tags.map((tag) => toKebabCase(tag));
+	// 		case 'object':
+	// 			if (Array.isArray(tags) && tags[0] !== null) {
+	// 				const formattedTags = tags.map((tag) => toKebabCase(tag));
 
-					return `__${formattedTags.join('_')}`;
-				}
+	// 				return `__${formattedTags.join('_')}`;
+	// 			}
 
-				return '';
+	// 			return '';
 
-			default:
-				return '';
-		}
-	}
+	// 		default:
+	// 			return '';
+	// 	}
+	// }
 }
