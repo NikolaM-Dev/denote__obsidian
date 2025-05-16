@@ -1,7 +1,12 @@
 import { App, TAbstractFile, TFile } from 'obsidian';
 import { format } from '@formkit/tempo';
 
-import { IFrontMatter, IFrontMatterProperty, ITags } from './models';
+import {
+	IFrontMatter,
+	IFrontMatterProperty,
+	ISanitizedFrontMatter,
+	ITags,
+} from './models';
 
 const INVALID = 'INVALID';
 
@@ -104,6 +109,18 @@ export async function getFrontMatter(
 	);
 
 	return _frontMatter;
+}
+
+export async function getSanitizedFrontMatter(
+	file: TFile,
+	app: App,
+): Promise<ISanitizedFrontMatter> {
+	const frontMatter = (await getFrontMatter(
+		file,
+		app,
+	)) as ISanitizedFrontMatter;
+
+	return frontMatter;
 }
 
 export function trim(payload: string): string {
@@ -254,4 +271,20 @@ export function sanitizeCreatedAt(
 
 	// Otherwise use current createdAt
 	return createdAt;
+}
+
+export function getNewFilename(
+	frontMatter: ISanitizedFrontMatter,
+	fileExtension: string,
+): string {
+	const formattedFilename = toKebabCase(frontMatter.title);
+	const formattedTags = getFormatTags(frontMatter.tags);
+
+	return `${frontMatter.id}--${formattedFilename}${formattedTags}.${fileExtension}`;
+}
+
+export function getFormatTags(tags: string[]): string {
+	const formattedTags = tags.map((tag) => toKebabCase(tag));
+
+	return `__${formattedTags.join('_')}`;
 }

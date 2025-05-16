@@ -2,6 +2,8 @@ import { Plugin, TAbstractFile, TFile } from 'obsidian';
 
 import {
 	getFrontMatter,
+	getNewFilename,
+	getSanitizedFrontMatter,
 	isTFile,
 	sanitizeId,
 	sanitizeTags,
@@ -46,5 +48,18 @@ export default class DenoteRenamer extends Plugin {
 		);
 	}
 
-	private async onRenameFile(file: TFile): Promise<void> {}
+	private async onRenameFile(file: TFile): Promise<void> {
+		const parent = file.parent;
+		if (!parent) return;
+
+		const excludedDirectories = ['4-archives/templates/obsidian'];
+		if (excludedDirectories.includes(parent.path)) return;
+
+		const frontMatter = await getSanitizedFrontMatter(file, this.app);
+
+		const newFilename = getNewFilename(frontMatter, file.extension);
+		const newPath = `${parent.path}/${newFilename}`;
+
+		await this.app.fileManager.renameFile(file, newPath);
+	}
 }

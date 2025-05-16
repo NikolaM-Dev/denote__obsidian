@@ -9,9 +9,10 @@ export interface IFrontMatter {
 	updatedAt: IFrontMatterProperty;
 }
 
-export interface IRenameFilenamePayload {
-	readonly fileBasename: string;
-	readonly fileExtension: string;
+export interface ISanitizedFrontMatter {
+	readonly createdAt: string;
 	readonly id: string;
-	readonly tags: ITags;
+	readonly tags: string[];
+	readonly title: string;
+	readonly updatedAt: string;
 }
