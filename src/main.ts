@@ -1,7 +1,6 @@
 import { Plugin, TAbstractFile, TFile } from 'obsidian';
 
 import {
-	toTitleCase,
 	getFrontMatter,
 	getNewFilename,
 	getSanitizedFrontMatter,
@@ -10,6 +9,7 @@ import {
 	sanitizeTags,
 	sanitizeTimeStamp,
 	sanitizeTitle,
+	toTitleCase,
 } from './utils';
 import { IFrontMatter } from './models';
 
@@ -67,6 +67,7 @@ export default class DenoteRenamer extends Plugin {
 				newHeading: toTitleCase(heading.heading),
 			};
 		});
+		const h1 = newHeadings.find((heading) => heading.level === 1);
 		const formattedHeadings = newHeadings.map(
 			(heading) => heading.newHeading,
 		);
@@ -79,6 +80,17 @@ export default class DenoteRenamer extends Plugin {
 						heading.newHeading,
 					);
 				});
+
+				if (h1) {
+					const title = sanitizeTitle(h1.newHeading);
+
+					this.app.fileManager.processFrontMatter(
+						file,
+						(frontMatter: IFrontMatter) => {
+							frontMatter.title = title;
+						},
+					);
+				}
 
 				return content;
 			});

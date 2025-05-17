@@ -2,16 +2,17 @@
 
 # 💡 Backlog
 
-- [ ] Auto rename title in base to the first H1.
 - [ ] Exclude directories settings.
+- [ ] Change to use 2 spaces.
 
 # ✅ Done
 
 > ⏳ Order of the most recent finished to the oldest.
 
+- [ ] Auto rename `title` property in base to the first _H1_.
 - [x] Format every heading.
 - [x] Restore denote auto renaming.
-- [x] Sanitize createdAt and updatedAt.
+- [x] Sanitize `createdAt` and `updatedAt`.
 - [x] Refactor the code.
 - [x] Format title.
 - [x] Add id frontmatter fallback.

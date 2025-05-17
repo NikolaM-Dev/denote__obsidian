@@ -235,19 +235,14 @@ export function toTitleCase(title: string): string {
 }
 
 export function sanitizeTitle(title: IFrontMatterProperty): string {
-	const fallbackTitle = 'Untitled';
-	let verifiedTitle = fallbackTitle;
+	const fallback = 'Untitled';
 
-	switch (typeof title) {
-		// If string, this means that id already exits and verifies format
-		case 'string':
-			verifiedTitle = toTitleCase(title);
-			break;
+	// If title doesn't exists use fallback
+	if (typeof title !== 'string') return fallback;
 
-		// In any other case use fallbackTitle
-		default:
-			verifiedTitle = fallbackTitle;
-	}
+	// Verify title integrity
+	const verifiedTitle = toTitleCase(trim(title));
+	if (verifiedTitle.length === 0) return fallback;
 
 	return verifiedTitle;
 }
