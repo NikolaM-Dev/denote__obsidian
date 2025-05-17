@@ -6,6 +6,7 @@ import {
   getNewFilename,
   getSanitizedFrontMatter,
   isTFile,
+  sanitizeCreatedAt,
   sanitizeId,
   sanitizeTags,
   sanitizeTimeStamp,
@@ -40,10 +41,10 @@ export default class DenoteRenamer extends Plugin {
   private async onSanitizeFrontMatter(file: TFile): Promise<void> {
     const frontMatter = await getFrontMatter(file, this.app);
 
-    const createdAt = sanitizeTimeStamp(file.stat.ctime);
     const id = sanitizeId(frontMatter.id, file.stat.ctime);
     const tags = sanitizeTags(frontMatter.tags);
     const title = sanitizeTitle(frontMatter.title);
+    const createdAt = sanitizeCreatedAt(frontMatter.createdAt, file.stat.ctime);
     const updatedAt = sanitizeTimeStamp(file.stat.mtime);
 
     this.app.fileManager.processFrontMatter(

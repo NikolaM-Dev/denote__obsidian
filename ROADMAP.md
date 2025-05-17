@@ -8,6 +8,7 @@
 
 > ⏳ Order of the most recent finished to the oldest.
 
+- [x] Fix `sanitizeCreatedAt` wasn't used.
 - [x] Pseudo fix corruption files in creation and renaming
 - [x] Exclude directories settings.
 - [x] Change to use 2 spaces.
