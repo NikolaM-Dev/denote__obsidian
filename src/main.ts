@@ -11,10 +11,14 @@ import {
   sanitizeTitle,
   toTitleCase,
 } from './utils';
+import { IDenoteSettings } from './settings';
 import { IFrontMatter } from './models';
 
 export default class DenoteRenamer extends Plugin {
   private cachedHeadigns: Record<string, string> = {};
+  private settings: IDenoteSettings = {
+    renameFile: { excludedDirectories: ['4-archives/templates/obsidian'] },
+  };
 
   async onload(): Promise<void> {
     const onModify = this.app.vault.on(
@@ -110,8 +114,9 @@ export default class DenoteRenamer extends Plugin {
     const parent = file.parent;
     if (!parent) return;
 
-    const excludedDirectories = ['4-archives/templates/obsidian'];
-    if (excludedDirectories.includes(parent.path)) return;
+    if (this.settings.renameFile.excludedDirectories.includes(parent.path)) {
+      return;
+    }
 
     const frontMatter = await getSanitizedFrontMatter(file, this.app);
 

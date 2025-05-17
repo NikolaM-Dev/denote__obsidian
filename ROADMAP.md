@@ -2,12 +2,13 @@
 
 # 💡 Backlog
 
-- [ ] Exclude directories settings.
+- [ ] ...
 
 # ✅ Done
 
 > ⏳ Order of the most recent finished to the oldest.
 
+- [x] Exclude directories settings.
 - [x] Change to use 2 spaces.
 - [x] Auto rename `title` property in base to the first _H1_.
 - [x] Format every heading.
