@@ -1,6 +1,7 @@
 import { Plugin, TAbstractFile, TFile } from 'obsidian';
 
 import {
+  ensureFileIsReadyToModify,
   getFrontMatter,
   getNewFilename,
   getSanitizedFrontMatter,
@@ -28,6 +29,7 @@ export default class DenoteRenamer extends Plugin {
 
         await this.onSanitizeFrontMatter(file);
         await this.onFormatHeadings(file);
+        await ensureFileIsReadyToModify(file);
         await this.onRenameFile(file);
       },
     );

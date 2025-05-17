@@ -9,6 +9,7 @@ import {
 } from './models';
 
 const INVALID = 'INVALID';
+const DEFAULT_FILENAME = 'Untitled';
 
 export function toKebabCase(payload: string): string {
   // Replace whitespace with hyphens
@@ -280,4 +281,16 @@ export function getFormatTags(tags: string[]): string {
   const formattedTags = tags.map((tag) => toKebabCase(tag));
 
   return `__${formattedTags.join('_')}`;
+}
+
+export function wait(ms: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+}
+
+export async function ensureFileIsReadyToModify(file: TFile): Promise<void> {
+  if (file.basename === DEFAULT_FILENAME) await wait(200);
 }

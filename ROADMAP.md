@@ -8,6 +8,7 @@
 
 > ⏳ Order of the most recent finished to the oldest.
 
+- [x] Pseudo fix corruption files in creation and renaming
 - [x] Exclude directories settings.
 - [x] Change to use 2 spaces.
 - [x] Auto rename `title` property in base to the first _H1_.
