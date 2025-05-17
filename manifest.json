@@ -1,11 +1,11 @@
 {
-	"id": "nkl-denote-renamer",
-	"name": "Denote Renamer",
-	"version": "1.0.0",
-	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "NikolaM-Dev",
-	"authorUrl": "https://github.com/NikolaM-Dev",
-	"fundingUrl": "https://obsidian.md/pricing",
-	"isDesktopOnly": false
+  "id": "nkl-denote-renamer",
+  "name": "Denote Renamer",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "Demonstrates some of the capabilities of the Obsidian API.",
+  "author": "NikolaM-Dev",
+  "authorUrl": "https://github.com/NikolaM-Dev",
+  "fundingUrl": "https://obsidian.md/pricing",
+  "isDesktopOnly": false
 }
