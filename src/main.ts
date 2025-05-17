@@ -5,6 +5,7 @@ import {
   getFrontMatter,
   getNewFilename,
   getSanitizedFrontMatter,
+  hasAnExcludedTag,
   isTFile,
   sanitizeCreatedAt,
   sanitizeId,
@@ -20,6 +21,15 @@ export default class DenoteRenamer extends Plugin {
   private cachedHeadigns: Record<string, string> = {};
   private settings: IDenoteSettings = {
     renameFile: { excludedDirectories: ['4-archives/templates/obsidian'] },
+    sanitizeFrontMatter: {
+      excludedTags: [
+        'journal/daily',
+        'journal/monthly',
+        'journal/quaterly',
+        'journal/weekly',
+        'journal/yearly',
+      ],
+    },
   };
 
   async onload(): Promise<void> {
@@ -28,9 +38,11 @@ export default class DenoteRenamer extends Plugin {
       async (file: TAbstractFile): Promise<void> => {
         if (!isTFile(file)) return;
 
-        await this.onSanitizeFrontMatter(file);
-        await this.onFormatHeadings(file);
         await ensureFileIsReadyToModify(file);
+
+        const skipProcess = await this.onSanitizeFrontMatter(file);
+
+        await this.onFormatHeadings(file, skipProcess);
         await this.onRenameFile(file);
       },
     );
@@ -38,28 +50,41 @@ export default class DenoteRenamer extends Plugin {
     this.registerEvent(onModify);
   }
 
-  private async onSanitizeFrontMatter(file: TFile): Promise<void> {
+  private async onSanitizeFrontMatter(file: TFile): Promise<boolean> {
     const frontMatter = await getFrontMatter(file, this.app);
 
-    const id = sanitizeId(frontMatter.id, file.stat.ctime);
     const tags = sanitizeTags(frontMatter.tags);
-    const title = sanitizeTitle(frontMatter.title);
+    const skipProcess = hasAnExcludedTag(
+      this.settings.sanitizeFrontMatter.excludedTags,
+      tags,
+    );
+
     const createdAt = sanitizeCreatedAt(frontMatter.createdAt, file.stat.ctime);
+    const id = sanitizeId(frontMatter.id, file.stat.ctime);
     const updatedAt = sanitizeTimeStamp(file.stat.mtime);
 
     this.app.fileManager.processFrontMatter(
       file,
       (frontMatter: IFrontMatter) => {
+        if (!skipProcess) {
+          const title = sanitizeTitle(frontMatter.title);
+          frontMatter.title = title;
+        }
+
         frontMatter.createdAt = createdAt;
         frontMatter.id = id;
         frontMatter.tags = tags;
-        frontMatter.title = title;
         frontMatter.updatedAt = updatedAt;
       },
     );
+
+    return skipProcess;
   }
 
-  private async onFormatHeadings(file: TFile): Promise<void> {
+  private async onFormatHeadings(
+    file: TFile,
+    skipProcess: boolean,
+  ): Promise<void> {
     const cachedMetadata = this.app.metadataCache.getFileCache(file);
     if (!cachedMetadata) return;
 
@@ -74,7 +99,6 @@ export default class DenoteRenamer extends Plugin {
         newHeading: toTitleCase(heading.heading),
       };
     });
-    const h1 = newHeadings.find((heading) => heading.level === 1);
     const formattedHeadings = newHeadings.map((heading) => heading.newHeading);
 
     const rewriteHeadings = (): void => {
@@ -83,16 +107,18 @@ export default class DenoteRenamer extends Plugin {
           content = content.replace(heading.heading, heading.newHeading);
         });
 
-        if (h1) {
-          const title = sanitizeTitle(h1.newHeading);
+        if (skipProcess) return content;
 
-          this.app.fileManager.processFrontMatter(
-            file,
-            (frontMatter: IFrontMatter) => {
-              frontMatter.title = title;
-            },
-          );
-        }
+        const h1 = newHeadings.find((heading) => heading.level === 1);
+        if (!h1) return content;
+
+        this.app.fileManager.processFrontMatter(
+          file,
+          (frontMatter: IFrontMatter) => {
+            const title = sanitizeTitle(h1.newHeading);
+            frontMatter.title = title;
+          },
+        );
 
         return content;
       });

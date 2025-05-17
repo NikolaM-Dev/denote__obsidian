@@ -283,6 +283,23 @@ export function getFormatTags(tags: string[]): string {
   return `__${formattedTags.join('_')}`;
 }
 
+export function hasAnExcludedTag(
+  excludedTags: string[],
+  tags: string[],
+): boolean {
+  let flag = false;
+
+  for (let i = 0; i < tags.length; i++) {
+    const tag = tags[i];
+    if (excludedTags.includes(tag)) {
+      flag = true;
+      break;
+    }
+  }
+
+  return flag;
+}
+
 export function wait(ms: number): Promise<void> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {

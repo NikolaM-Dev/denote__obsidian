@@ -2,12 +2,15 @@
 
 # 💡 Backlog
 
-- [ ] ...
+- [ ] Change autorename to be used as a command like in denote to avoid
+      conflicts.
+- [ ] Add settings interface.
 
 # ✅ Done
 
 > ⏳ Order of the most recent finished to the oldest.
 
+- [x] Skip logic when has certain tags
 - [x] Fix `sanitizeCreatedAt` wasn't used.
 - [x] Pseudo fix corruption files in creation and renaming
 - [x] Exclude directories settings.
