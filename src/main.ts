@@ -66,15 +66,15 @@ export default class DenoteRenamer extends Plugin {
     this.app.fileManager.processFrontMatter(
       file,
       (frontMatter: IFrontMatter) => {
-        if (!skipProcess) {
-          const title = sanitizeTitle(frontMatter.title);
-          frontMatter.title = title;
-        }
-
         frontMatter.createdAt = createdAt;
         frontMatter.id = id;
         frontMatter.tags = tags;
         frontMatter.updatedAt = updatedAt;
+
+        if (skipProcess) return;
+
+        const title = sanitizeTitle(frontMatter.title);
+        frontMatter.title = title;
       },
     );
 
@@ -93,13 +93,21 @@ export default class DenoteRenamer extends Plugin {
 
     const frontMatter = await getSanitizedFrontMatter(file, this.app);
 
-    const newHeadings = headings.map((heading) => {
+    const newHeadings = headings.map((heading, i) => {
+      const skipH1 = skipProcess && heading.level === 1 && i === 0;
+      if (skipH1) {
+        return {
+          ...heading,
+          newHeading: heading.heading,
+        };
+      }
+
       return {
         ...heading,
         newHeading: toTitleCase(heading.heading),
       };
     });
-    const formattedHeadings = newHeadings.map((heading) => heading.newHeading);
+    const headingsToCache = newHeadings.map((heading) => heading.heading);
 
     const rewriteHeadings = (): void => {
       this.app.vault.process(file, (content: string): string => {
@@ -126,7 +134,7 @@ export default class DenoteRenamer extends Plugin {
       this.cachedHeadigns[frontMatter.id] = nextCachedHeadings;
     };
 
-    const nextCachedHeadings = formattedHeadings.join();
+    const nextCachedHeadings = headingsToCache.join();
     const currentCachedHeadings = this.cachedHeadigns[frontMatter.id];
 
     // If there is not cache

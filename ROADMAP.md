@@ -2,6 +2,7 @@
 
 # 💡 Backlog
 
+- [ ] Fix `createdAt` and `updatedAt` sanitization in `excludedDirectories`
 - [ ] Change autorename to be used as a command like in denote to avoid
       conflicts.
 - [ ] Add settings interface.
@@ -10,6 +11,7 @@
 
 > ⏳ Order of the most recent finished to the oldest.
 
+- [x] Fix `onFormatHeadings` bug, don't excluded files with `excludeTags`
 - [x] Skip logic when has certain tags
 - [x] Fix `sanitizeCreatedAt` wasn't used.
 - [x] Pseudo fix corruption files in creation and renaming
