@@ -349,5 +349,5 @@ function wait(ms: number): Promise<void> {
 }
 
 export async function ensureFileIsReadyToModify(file: TFile): Promise<void> {
-  if (file.basename === DEFAULT_FILENAME) await wait(200);
+  if (file.basename === DEFAULT_FILENAME) await wait(4 * 1000);
 }
