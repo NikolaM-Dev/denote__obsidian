@@ -314,6 +314,30 @@ export function hasAndExcludedPath(
 
   return false;
 }
+
+export function hasToSkipProcess(payload: {
+  file: TFile;
+  frontMatter: ISanitizedFrontMatter;
+  settings: IDenoteSettings;
+}): boolean {
+  const { file, settings, frontMatter } = payload;
+
+  if (hasAndExcludedPath(file, settings.renameFile.excludedDirectories)) {
+    return true;
+  }
+
+  if (
+    hasAnExcludedTag(
+      settings.sanitizeFrontMatter.excludedTags,
+      frontMatter.tags,
+    )
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 /**
  * Pauses execution for a specified number of milliseconds.
  *
