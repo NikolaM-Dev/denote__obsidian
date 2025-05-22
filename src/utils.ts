@@ -7,6 +7,7 @@ import {
   ISanitizedFrontMatter,
   ITags,
 } from './models';
+import { IDenoteSettings } from './settings';
 
 const INVALID = 'INVALID';
 const DEFAULT_FILENAME = 'Untitled';
@@ -300,12 +301,19 @@ export function hasAnExcludedTag(
   return flag;
 }
 
-export function wait(ms: number): Promise<void> {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve();
-    }, ms);
-  });
+export function hasAndExcludedPath(
+  file: TFile,
+  excludedDirectories: string[],
+): boolean {
+  const parent = file.parent;
+  if (!parent) return true;
+
+  if (excludedDirectories.includes(parent.path)) {
+    return true;
+  }
+
+  return false;
+}
 /**
  * Pauses execution for a specified number of milliseconds.
  *
