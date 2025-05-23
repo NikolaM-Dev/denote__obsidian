@@ -10,7 +10,6 @@ import {
 import { IDenoteSettings } from './settings';
 
 const INVALID = 'INVALID';
-const DEFAULT_FILENAME = 'Untitled';
 
 export function toKebabCase(payload: string): string {
   // Replace whitespace with hyphens
@@ -83,10 +82,6 @@ export function testToKebabCase() {
   });
 }
 
-export function isTFile(value: TAbstractFile): value is TFile {
-  return 'stat' in value;
-}
-
 export async function getFrontMatter(
   file: TFile,
   app: App,
@@ -101,7 +96,7 @@ export async function getFrontMatter(
 
   await app.fileManager.processFrontMatter(
     file,
-    async (frontMatter: IFrontMatter) => {
+    async (frontMatter: IFrontMatter): Promise<void> => {
       if (Object.entries(frontMatter).length === 0) return;
 
       _frontMatter = frontMatter;
@@ -155,7 +150,7 @@ export function sanitizeTags(tags: ITags): string[] {
 
       // Remove null tags
       if (Array.isArray(tags)) {
-        verifiedTags = tags.filter((tag) => tag !== null);
+        verifiedTags = tags.filter((tag: string) => tag !== null);
       }
 
       // sanitaizedTags after filter is an empty array, use fallbackTags
@@ -336,18 +331,4 @@ export function hasToSkipProcess(payload: {
   }
 
   return false;
-}
-
-/**
- * Pauses execution for a specified number of milliseconds.
- *
- * @param {number} ms - The number of milliseconds to wait.
- * @returns {Promise<void>} A promise that resolves after the specified delay.
- */
-function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export async function ensureFileIsReadyToModify(file: TFile): Promise<void> {
-  if (file.basename === DEFAULT_FILENAME) await wait(4 * 1000);
 }
