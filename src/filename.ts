@@ -19,3 +19,50 @@ function toKebabCase(payload: string): string {
 
   return result;
 }
+
+function sanitizeTags(tags: ITags): string[] {
+  const fallbackTags: string[] = [];
+  let verifiedTags = fallbackTags;
+
+  switch (typeof tags) {
+    case 'undefined':
+      // Explicity setting verifiedTags to use fallbackTags
+      verifiedTags = fallbackTags;
+      break;
+
+    case 'string':
+      // Change one single tag to array format
+      verifiedTags = [tags];
+      break;
+
+    case 'object':
+      // When tags is null, just use fallbackTags
+      if (tags === null) {
+        verifiedTags = fallbackTags;
+        break;
+      }
+
+      // Remove null tags
+      if (Array.isArray(tags)) {
+        verifiedTags = tags.filter((tag: string) => tag !== null);
+      }
+
+      // sanitaizedTags after filter is an empty array, use fallbackTags
+      if (verifiedTags.length === 0) verifiedTags = fallbackTags;
+
+      break;
+  }
+
+  const trimmedTags = verifiedTags.map((tag) => trim(tag));
+  const sortedTags = sortTags(trimmedTags);
+
+  return sortedTags;
+}
+
+function trim(payload: string): string {
+  return payload.replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
+}
+
+function sortTags(tags: string[]): string[] {
+  return tags.sort((a, b) => a.localeCompare(b));
+}
