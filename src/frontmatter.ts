@@ -6,7 +6,7 @@ export interface IFrontMatter {
   createdAt: string;
   id: string;
   tags: string[];
-  updateAt: string;
+  updatedAt: string;
 }
 
 export async function getFrontMatter(
@@ -18,7 +18,7 @@ export async function getFrontMatter(
     aliases: [],
     tags: ['untagged'],
     createdAt: getFrontMatterCreatedAt(file),
-    updateAt: getFrontMatterUpdatedAt(file),
+    updatedAt: getFrontMatterUpdatedAt(file),
   };
 
   await app.fileManager.processFrontMatter(
@@ -44,7 +44,7 @@ export async function getFrontMatter(
 
       frontMatter.id = _frontMatter.id;
       frontMatter.createdAt = _frontMatter.createdAt;
-      frontMatter.updateAt = _frontMatter.updateAt;
+      frontMatter.updatedAt = _frontMatter.updatedAt;
 
       _frontMatter = frontMatter;
     },
