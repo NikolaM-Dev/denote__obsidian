@@ -1,3 +1,18 @@
+export type ITags = undefined | null | string | string[];
+
+export function getSlug(title: string): string {
+  return toKebabCase(title);
+}
+
+export function getFormatTags(tags: string[]): string {
+  const sanitizedTags = sanitizeTags(tags);
+  if (sanitizedTags.length <= 0) return '';
+
+  const formattedTags = sanitizedTags.map((tag) => toKebabCase(tag));
+
+  return `__${formattedTags.join('_')}`;
+}
+
 function toKebabCase(payload: string): string {
   // Replace whitespace with hyphens
   let result = payload.replace(/\s+/g, '-');
