@@ -52,3 +52,31 @@ export async function getFrontMatter(
 
   return _frontMatter;
 }
+
+export async function setFrontMatter(
+  app: App,
+  file: TFile,
+  newFrontMatter: Partial<IFrontMatter>,
+): Promise<void> {
+  await app.fileManager.processFrontMatter(
+    file,
+    (frontMatter: IFrontMatter): void => {
+      Object.entries(newFrontMatter).forEach(([property, value]) => {
+        // @ts-ignore
+        frontMatter[property] = value;
+      });
+    },
+  );
+}
+
+export function getFrontMatterId(file: TFile): string {
+  return format(new Date(file.stat.ctime), 'YYYYMMDDTHHmmss');
+}
+
+export function getFrontMatterCreatedAt(file: TFile): string {
+  return format(new Date(file.stat.ctime), '[[YYYY-MM-DD]]');
+}
+
+export function getFrontMatterUpdatedAt(file: TFile): string {
+  return format(new Date(file.stat.mtime), 'YYYY-MM-DD, HH:mm:ss');
+}
