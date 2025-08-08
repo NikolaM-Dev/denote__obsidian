@@ -1,3 +1,18 @@
+import { App, Command } from 'obsidian';
+
+import { getFormatTags, getSlug } from './filename';
+import { getFrontMatter, setFrontMatter } from './frontmatter';
+import { log, notify } from './log';
+
+export function getRenameCommand(app: App): Command {
+  return {
+    id: 'denote-rename-file',
+    name: 'Rename File',
+
+    callback: async () => await renameFile(app),
+  };
+}
+
 export async function renameFile(app: App): Promise<void> {
   const file = app.workspace.getActiveFile();
 
