@@ -10,8 +10,11 @@
     "format:fix": "prettier . --write",
     "format:check": "prettier . --check"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "denote",
+    "obsidian"
+  ],
+  "author": "Juan David Merchan Torres (NikolaM-Dev)",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "16.11.6",
