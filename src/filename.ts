@@ -1,3 +1,5 @@
+import { sortTags } from './utils';
+
 export type ITags = undefined | null | string | string[];
 
 export function getSlug(title: string): string {
@@ -76,8 +78,4 @@ function sanitizeTags(tags: ITags): string[] {
 
 function trim(payload: string): string {
   return payload.replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
-}
-
-function sortTags(tags: string[]): string[] {
-  return tags.sort((a, b) => a.localeCompare(b));
 }

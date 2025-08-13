@@ -1,6 +1,8 @@
 import { App, TFile } from 'obsidian';
 import { format } from '@formkit/tempo';
 
+import { sortTags } from './utils';
+
 export interface IFrontMatter {
   aliases: string[];
   createdAt: string;
@@ -45,6 +47,7 @@ export async function getFrontMatter(
       frontMatter.id = _frontMatter.id;
       frontMatter.createdAt = _frontMatter.createdAt;
       frontMatter.updatedAt = _frontMatter.updatedAt;
+      frontMatter.tags = sortTags(frontMatter.tags);
 
       _frontMatter = frontMatter;
     },
