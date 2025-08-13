@@ -1,5 +1,5 @@
 {
-  "name": "denote.obsidian",
+  "name": "denote__obsidian",
   "version": "2.2.1",
   "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
   "main": "main.js",
