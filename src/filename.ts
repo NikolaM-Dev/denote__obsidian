@@ -1,4 +1,4 @@
-import { sortTags } from './utils';
+import { sortTags, trim } from './utils';
 
 export type ITags = undefined | null | string | string[];
 
@@ -74,8 +74,4 @@ function sanitizeTags(tags: ITags): string[] {
   const sortedTags = sortTags(trimmedTags);
 
   return sortedTags;
-}
-
-function trim(payload: string): string {
-  return payload.replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
 }
