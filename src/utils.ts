@@ -52,3 +52,43 @@ export function cleanAndValidateFilename(filename: string): string {
 
   return cleanedFilename;
 }
+
+export function toTitleCase(title: string): string {
+  const formattedTitle = trim(title).toLowerCase();
+
+  // Split the string into words
+  const words = formattedTitle.split(/\s+/);
+
+  // Words to keep in lowercase (you can expand this list)
+  const lowercaseWords = [
+    'a',
+    'an',
+    'and',
+    'as',
+    'at',
+    'but',
+    'by',
+    'en',
+    'for',
+    'from',
+    'if',
+    'in',
+    'nor',
+    'of',
+    'on',
+    'or',
+    'per',
+    'the',
+    'to',
+  ];
+
+  // Capitalize the first word and other words not in the lowercase list
+  for (let i = 0; i < words.length; i++) {
+    if (i === 0 || !lowercaseWords.includes(words[i])) {
+      words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+    }
+  }
+
+  // Join the words back together
+  return words.join(' ');
+}
