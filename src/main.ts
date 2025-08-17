@@ -7,7 +7,7 @@ export default class Denote extends Plugin {
   readonly app: App;
 
   async onload(): Promise<void> {
-    log('[DENOTE]: Denote is on');
+    log('Denote is on');
 
     this.addCommand(getFormatFrontMatterCommand(this.app));
   }
@@ -15,6 +15,6 @@ export default class Denote extends Plugin {
   async onunload(): Promise<void> {
     console.clear();
 
-    log('[DENOTE]: Denote is off');
+    log('Denote is off');
   }
 }
