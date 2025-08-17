@@ -1,6 +1,6 @@
 {
   "name": "denote__obsidian",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
   "main": "main.js",
   "scripts": {

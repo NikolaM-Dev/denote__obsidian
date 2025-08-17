@@ -4,16 +4,16 @@ import { getFormatTags, getSlug } from './filename';
 import { getFrontMatter, setFrontMatter } from './frontmatter';
 import { log, notify } from './log';
 
-export function getRenameCommand(app: App): Command {
+export function getDenoteSchemeRenameFileCommand(app: App): Command {
   return {
-    id: 'denote-rename-file',
-    name: 'Rename File',
+    id: 'denote-scheme-rename-file',
+    name: 'Rename File Using Denote Scheme',
 
     callback: async () => await renameFile(app),
   };
 }
 
-export async function renameFile(app: App): Promise<void> {
+async function renameFile(app: App): Promise<void> {
   const file = app.workspace.getActiveFile();
 
   if (!file) return log('File not found');

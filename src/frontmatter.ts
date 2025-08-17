@@ -32,18 +32,6 @@ export async function getFrontMatter(
         frontMatter.tags = _frontMatter.tags;
       }
 
-      if (!frontMatter.aliases || frontMatter.aliases.length === 0) {
-        frontMatter.aliases = _frontMatter.aliases;
-      }
-
-      if (frontMatter.aliases.length === 0) {
-        if (!frontMatter.tags.includes('untitled')) {
-          frontMatter.tags.push('untitled');
-        }
-      } else {
-        frontMatter.tags = frontMatter.tags.filter((tag) => tag !== 'untitled');
-      }
-
       frontMatter.id = _frontMatter.id;
       frontMatter.createdAt = _frontMatter.createdAt;
       frontMatter.updatedAt = _frontMatter.updatedAt;
