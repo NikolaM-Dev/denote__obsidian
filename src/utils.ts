@@ -92,6 +92,19 @@ export function toTitleCase(title: string): string {
   // Join the words back together
   return words.join(' ');
 }
+export function skipLogic(file: TFile): boolean {
+  let flag = false;
+  for (const element of ['Journal', 'templates', 'Sources']) {
+    if (!file.path.includes(element)) continue;
+
+    notify('⏭️ Skipped File');
+    flag = true;
+    break;
+  }
+
+  return false;
+}
+
 export function getFile(app: App): TFile | null {
   const file = app.workspace.getActiveFile();
 
