@@ -6,11 +6,11 @@ const DEBUG_MODE = true;
 export function log(msg: string): void {
   if (!DEBUG_MODE) return;
 
-  console.log(msg);
+  console.log(`[DENOTE]: ${msg}`);
 }
 
 export function notify(msg: string): void {
   if (!DEBUG_MODE) return;
 
-  new Notice(msg);
+  new Notice(`[DENOTE]: ${msg}`);
 }
