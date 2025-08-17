@@ -92,3 +92,14 @@ export function toTitleCase(title: string): string {
   // Join the words back together
   return words.join(' ');
 }
+export function getFile(app: App): TFile | null {
+  const file = app.workspace.getActiveFile();
+
+  if (!file) {
+    notify('🤷‍♂️ File not found');
+
+    return null;
+  }
+
+  return file;
+}
