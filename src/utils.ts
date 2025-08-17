@@ -1,3 +1,10 @@
+import { App, TFile } from 'obsidian';
+import { notify } from './log';
+
+enum Extensions {
+  MARKDOWN = 'md',
+}
+
 export function sortTags(tags: string[]): string[] {
   return tags.sort((a, b) => a.localeCompare(b));
 }
@@ -92,6 +99,11 @@ export function toTitleCase(title: string): string {
   // Join the words back together
   return words.join(' ');
 }
+
+export function isMarkdownFile(file: TFile): boolean {
+  return file && file.extension === Extensions.MARKDOWN;
+}
+
 export function skipLogic(file: TFile): boolean {
   let flag = false;
   for (const element of ['Journal', 'templates', 'Sources']) {
