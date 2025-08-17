@@ -28,8 +28,7 @@ async function renameFile(app: App): Promise<void> {
   const newFilename = cleanAndValidateFilename(h1.heading);
   if (newFilename === file.basename) return;
 
-  const newPath = `${file.parent.path}/${newFilename}.md`;
-  await this.app.vault.rename(file, newPath);
+  const newPath = `${file.parent.path}/${newFilename}.${file.extension}`;
 
-  await this.app.fileManager.renameFile(file, newPath);
+  await app.fileManager.renameFile(file, newPath);
 }
