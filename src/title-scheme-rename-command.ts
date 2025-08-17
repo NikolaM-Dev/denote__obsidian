@@ -1,7 +1,7 @@
 import { App, Command } from 'obsidian';
 
-import { cleanAndValidateFilename } from './utils';
-import { log, notify } from './log';
+import { cleanAndValidateFilename, getFile, skipLogic } from './utils';
+import { notify } from './log';
 
 export function getTitleSchemeRenameFileCommand(app: App): Command {
   return {
@@ -13,9 +13,11 @@ export function getTitleSchemeRenameFileCommand(app: App): Command {
 }
 
 async function renameFile(app: App): Promise<void> {
-  const file = app.workspace.getActiveFile();
+  const file = getFile(app);
+  if (!file) return;
 
-  if (!file) return log('File not found');
+  if (skipLogic(file)) return;
+
   if (!file.parent) return notify("⚠️ File doesn't have file.parent");
 
   const cache = app.metadataCache.getFileCache(file);
