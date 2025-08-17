@@ -1,6 +1,6 @@
 import { App, Plugin } from 'obsidian';
 
-import { getRenameCommand } from './rename-command';
+import { getFormatFrontMatterCommand } from './format-front-matter-command';
 import { log } from './log';
 
 export default class Denote extends Plugin {
@@ -9,7 +9,7 @@ export default class Denote extends Plugin {
   async onload(): Promise<void> {
     log('[DENOTE]: Denote is on');
 
-    this.addCommand(getRenameCommand(this.app));
+    this.addCommand(getFormatFrontMatterCommand(this.app));
   }
 
   async onunload(): Promise<void> {
