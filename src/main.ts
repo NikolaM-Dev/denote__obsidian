@@ -8,7 +8,7 @@ import {
   renameFile,
 } from './features';
 import { ctx, logger, wait } from './lib';
-import { getCommand } from './obsidian';
+import { getCommand, getIsSuggestionElementActive } from './obsidian';
 
 export default class Denote extends Plugin {
   readonly app: App;
@@ -87,5 +87,42 @@ export default class Denote extends Plugin {
         await renameFile();
       }),
     );
+
+    // Select next item in an autocomplete DOM Element
+    this.registerDomEvent(document, 'keydown', (evt: KeyboardEvent) => {
+      const isKeyPattern = evt.ctrlKey && evt.key === 'j';
+      if (!isKeyPattern) return;
+
+      const isSuggestionElement = getIsSuggestionElementActive();
+      if (!isSuggestionElement) return;
+
+      evt.stopPropagation();
+      evt.preventDefault();
+
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+      );
+    });
+
+    // Select next item in an autocomplete DOM Element
+    this.registerDomEvent(document, 'keydown', (evt: KeyboardEvent) => {
+      const isKeyPattern = evt.ctrlKey && evt.key === 'k';
+      if (!isKeyPattern) return;
+
+      const isSuggestionElement = getIsSuggestionElementActive();
+
+      evt.stopPropagation();
+      evt.preventDefault();
+
+      // To also use <C-k> for open find lines
+      if (!isSuggestionElement) {
+        document.dispatchEvent(
+          new KeyboardEvent('keydown', { ctrlKey: true, key: 'p' }),
+        );
+        return;
+      }
+
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+    });
   }
 }
