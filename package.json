@@ -1,6 +1,6 @@
 {
   "name": "denote__obsidian",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
   "main": "main.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "typescript": "4.7.4"
   },
   "dependencies": {
-    "@formkit/tempo": "0.1.2"
+    "@formkit/tempo": "0.1.2",
+    "neverthrow": "8.2.0"
   }
 }
