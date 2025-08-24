@@ -1,27 +1,91 @@
 import { App, Plugin } from 'obsidian';
 
-import { getFormatFrontMatterCommand } from './format-front-matter-command';
-import { getFormatHeadings } from './format-headings-command';
-import { getTitleSchemeRenameFileCommand } from './title-scheme-rename-command';
-import { log } from './log';
-import { onVerifyFilename } from './on-verify-filename';
+import {
+  formatFrontMater,
+  formatHeadings,
+  fuzzyFindBackLinks,
+  fuzzyFindOutgoingLinks,
+  renameFile,
+} from './features';
+import { ctx, logger, wait } from './lib';
+import { getCommand } from './obsidian';
 
 export default class Denote extends Plugin {
   readonly app: App;
 
   async onload(): Promise<void> {
-    log('Denote is on');
+    logger.info({ msg: 'Denote is ON' });
 
-    this.addCommand(getFormatFrontMatterCommand(this.app));
-    this.addCommand(getFormatHeadings(this.app));
-    this.addCommand(getTitleSchemeRenameFileCommand(this.app));
+    ctx.setApp(this.app);
 
-    this.app.metadataCache.on('changed', onVerifyFilename);
+    this.setCommands();
+    this.setEvents();
   }
 
   async onunload(): Promise<void> {
+    ctx.setApp(null);
     console.clear();
 
-    log('Denote is off');
+    logger.info({ msg: 'Denote is OFF' });
+  }
+
+  private setCommands(): void {
+    this.addCommand(
+      getCommand({
+        id: 'format-heading',
+        name: 'Format Heading',
+
+        callback: formatHeadings,
+      }),
+    );
+
+    this.addCommand(
+      getCommand({
+        id: 'rename-file',
+        name: 'Rename File',
+
+        callback: renameFile,
+      }),
+    );
+
+    this.addCommand(
+      getCommand({
+        id: 'format-front-matter',
+        name: 'Format Front Matter',
+
+        callback: formatFrontMater,
+      }),
+    );
+
+    this.addCommand(
+      getCommand({
+        id: 'fuzzy-find-backlinks',
+        name: 'Fuzzy Find BackLinks',
+
+        callback: fuzzyFindBackLinks,
+      }),
+    );
+
+    this.addCommand(
+      getCommand({
+        id: 'fuzzy-find-outgoing-links',
+        name: 'Fuzzy Find Outgoing Links',
+
+        callback: fuzzyFindOutgoingLinks,
+      }),
+    );
+  }
+
+  private setEvents(): void {
+    this.registerEvent(
+      this.app.metadataCache.on('changed', async () => {
+        await formatHeadings();
+        await formatFrontMater();
+
+        // Delay to prevent modify and old cached file
+        await wait(200);
+        await renameFile();
+      }),
+    );
   }
 }
