@@ -8,7 +8,7 @@ import {
   renameFile,
 } from './features';
 import { ctx, logger, wait } from './lib';
-import { getCommand, getIsSuggestionElementActive } from './obsidian';
+import { getCommand, getIsSuggestionElementActive, ICommand } from './obsidian';
 
 export default class Denote extends Plugin {
   readonly app: App;
@@ -30,50 +30,17 @@ export default class Denote extends Plugin {
   }
 
   private setCommands(): void {
-    this.addCommand(
-      getCommand({
-        id: 'format-heading',
-        name: 'Format Heading',
+    const commands: ICommand[] = [
+      { name: 'Format Heading', callback: formatHeadings },
+      { name: 'Rename File', callback: renameFile },
+      { name: 'Format Front Matter', callback: formatFrontMater },
+      { name: 'Fuzzy Find BackLinks', callback: fuzzyFindBackLinks },
+      { name: 'Fuzzy Find Outgoing Links', callback: fuzzyFindOutgoingLinks },
+    ];
 
-        callback: formatHeadings,
-      }),
-    );
-
-    this.addCommand(
-      getCommand({
-        id: 'rename-file',
-        name: 'Rename File',
-
-        callback: renameFile,
-      }),
-    );
-
-    this.addCommand(
-      getCommand({
-        id: 'format-front-matter',
-        name: 'Format Front Matter',
-
-        callback: formatFrontMater,
-      }),
-    );
-
-    this.addCommand(
-      getCommand({
-        id: 'fuzzy-find-backlinks',
-        name: 'Fuzzy Find BackLinks',
-
-        callback: fuzzyFindBackLinks,
-      }),
-    );
-
-    this.addCommand(
-      getCommand({
-        id: 'fuzzy-find-outgoing-links',
-        name: 'Fuzzy Find Outgoing Links',
-
-        callback: fuzzyFindOutgoingLinks,
-      }),
-    );
+    commands.forEach((command) => {
+      this.addCommand(getCommand(command));
+    });
   }
 
   private setEvents(): void {
