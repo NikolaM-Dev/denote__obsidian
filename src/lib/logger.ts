@@ -8,7 +8,7 @@ interface ILogPayload {
   showToast?: boolean;
 }
 
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 const PLUGIN_PREFIX = '[DENOTE]:';
 
 export const logger = {
@@ -27,7 +27,6 @@ function toast(msg: string, icon?: string): void {
 }
 
 function log(payload: ILogPayload): void {
-  if (!DEBUG_MODE) return;
   const { extra, icon, msg, showToast = true } = payload;
 
   console.log(`${PLUGIN_PREFIX} ${msg}`);
