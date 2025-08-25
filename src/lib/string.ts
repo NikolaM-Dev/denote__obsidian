@@ -6,6 +6,10 @@ export function trim(payload: string): string {
   return payload.replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
 }
 
+export function toCapitalize(payload: string): string {
+  return payload.charAt(0).toUpperCase() + payload.slice(1);
+}
+
 export function toKebabCase(payload: string): string {
   // Replace whitespace with hyphens
   let result = payload.replace(/\s+/g, '-');
