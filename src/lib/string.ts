@@ -41,6 +41,7 @@ export function toTitleCase(payload: string): string {
   // Words to format with a specialFormat
   const specialWords: Record<string, string> = {
     ai: 'AI',
+    jsdoc: 'JSDoc',
     minecraft: 'MineCraft',
   };
 
