@@ -22,7 +22,6 @@ export class FuzzyFindBackLinksModal extends FuzzySuggestModal<LinkCache> {
 
   renderSuggestion(match: FuzzyMatch<LinkCache>, el: HTMLElement) {
     const titleEl = el.createDiv();
-    console.log({ matchItem: match.item });
     renderResults(
       titleEl,
       match.item.displayText ?? match.item.link,
