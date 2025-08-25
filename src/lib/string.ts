@@ -45,21 +45,23 @@ export function toTitleCase(payload: string): string {
     minecraft: 'MineCraft',
   };
 
-  // Capitalize the first word and other words not in the lowercase list
-  for (let i = 0; i < words.length; i++) {
-    const word = words[i];
+  const specialWordsKeys = Object.keys(specialWords);
 
-    if (specialWords[word]) {
-      words[i] = specialWords[word];
+  const formattedWords = words.map((word) => {
+    let capitalizedWord = toCapitalize(word);
+    for (const key of specialWordsKeys) {
+      if (word.includes(key)) {
+        capitalizedWord = word.replace(key, specialWords[key]);
 
-      continue;
+        break;
+      }
     }
 
-    words[i] = word.charAt(0).toUpperCase() + word.slice(1);
-  }
+    return capitalizedWord;
+  });
 
   // Join the words back together
-  return words.join(' ');
+  return formattedWords.join(' ');
 }
 
 export function toFileName(payload: string): string {
