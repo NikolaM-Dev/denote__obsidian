@@ -104,5 +104,5 @@ export function toFileName(payload: string): string {
     throw new Error('Filename cannot be empty after cleaning.');
   }
 
-  return cleanedFilename;
+  return trim(cleanedFilename);
 }
