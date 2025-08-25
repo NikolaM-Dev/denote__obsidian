@@ -6,6 +6,10 @@ export function trim(payload: string): string {
   return payload.replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
 }
 
+export function toCapitalize(payload: string): string {
+  return payload.charAt(0).toUpperCase() + payload.slice(1);
+}
+
 export function toKebabCase(payload: string): string {
   // Replace whitespace with hyphens
   let result = payload.replace(/\s+/g, '-');
@@ -37,24 +41,27 @@ export function toTitleCase(payload: string): string {
   // Words to format with a specialFormat
   const specialWords: Record<string, string> = {
     ai: 'AI',
+    jsdoc: 'JSDoc',
     minecraft: 'MineCraft',
   };
 
-  // Capitalize the first word and other words not in the lowercase list
-  for (let i = 0; i < words.length; i++) {
-    const word = words[i];
+  const specialWordsKeys = Object.keys(specialWords);
 
-    if (specialWords[word]) {
-      words[i] = specialWords[word];
+  const formattedWords = words.map((word) => {
+    let capitalizedWord = toCapitalize(word);
+    for (const key of specialWordsKeys) {
+      if (word.includes(key)) {
+        capitalizedWord = word.replace(key, specialWords[key]);
 
-      continue;
+        break;
+      }
     }
 
-    words[i] = word.charAt(0).toUpperCase() + word.slice(1);
-  }
+    return capitalizedWord;
+  });
 
   // Join the words back together
-  return words.join(' ');
+  return formattedWords.join(' ');
 }
 
 export function toFileName(payload: string): string {
@@ -97,5 +104,5 @@ export function toFileName(payload: string): string {
     throw new Error('Filename cannot be empty after cleaning.');
   }
 
-  return cleanedFilename;
+  return trim(cleanedFilename);
 }
