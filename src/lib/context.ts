@@ -1,6 +1,7 @@
 import { App } from 'obsidian';
 import { err, ok, Result } from 'neverthrow';
 
+export type IHeadingsCache = Record<string, string>;
 
 export class ctx {
   private static _app: App | null = null;
@@ -19,4 +20,11 @@ export class ctx {
     this._app = app;
   }
 
+  static getHeadingsCacheItem(id: string): string | null {
+    return this._headingsCache[id];
+  }
 
+  static setHeadingsCacheItem(id: string, cache: string): void {
+    this._headingsCache[id] = cache;
+  }
+}
