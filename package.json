@@ -6,8 +6,10 @@
   "scripts": {
     "build": "tsc -noEmit -skipLibCheck && bun run esbuild.config.mjs production",
     "dev": "bun run esbuild.config.mjs",
-    "format:check": "prettier . --check"
+    "format:check": "prettier . --check",
     "format:fix": "prettier . --write",
+    "sync": "make install",
+    "version": "make version"
   },
   "keywords": [
     "denote",
