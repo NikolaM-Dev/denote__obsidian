@@ -2,7 +2,7 @@
   "name": "denote__obsidian",
   "version": "5.3.0",
   "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
-  "main": "main.js",
+  "main": "main.ts",
   "scripts": {
     "build": "tsc -noEmit -skipLibCheck && bun run esbuild.config.mjs production",
     "dev": "bun run esbuild.config.mjs",
