@@ -1,4 +1,4 @@
-import { HeadingCache } from 'obsidian';
+import { App, HeadingCache, TFile } from 'obsidian';
 
 import { ctx, logger, toTitleCase } from 'src/lib';
 import { getActiveFile, isMarkdownFile } from 'src/obsidian';
@@ -6,6 +6,13 @@ import { hasToSkipFile } from './exclude-files';
 
 interface INewHeading extends HeadingCache {
   newHeading: string;
+}
+
+interface IUpdateHeadingsPayload {
+  activeFile: TFile;
+  app: App;
+  headingsToCache: string;
+  newHeadings: INewHeading[];
 }
 
 export async function formatHeadings(): Promise<void> {
@@ -49,11 +56,36 @@ export async function formatHeadings(): Promise<void> {
     };
   });
 
-  await app.vault.process(fileResult.value, (content: string): string => {
+  const headingsToCache = newHeadings.map((heading) => heading.heading).join();
+  const updateHeadingsPayload: IUpdateHeadingsPayload = {
+    activeFile,
+    app,
+    newHeadings,
+    headingsToCache,
+  };
+
+  const currentHeadingsCache = ctx.getHeadingsCacheItem(activeFile.path);
+  if (!currentHeadingsCache) {
+    await updateHeadings(updateHeadingsPayload);
+
+    return;
+  }
+
+  if (headingsToCache === currentHeadingsCache) return;
+
+  await updateHeadings(updateHeadingsPayload);
+}
+
+async function updateHeadings(payload: IUpdateHeadingsPayload): Promise<void> {
+  const { activeFile, app, headingsToCache, newHeadings } = payload;
+
+  await app.vault.process(activeFile, (content: string): string => {
     newHeadings.forEach((heading) => {
       content = content.replace(heading.heading, heading.newHeading);
     });
 
     return content;
   });
+
+  ctx.setHeadingsCacheItem(activeFile.path, headingsToCache);
 }

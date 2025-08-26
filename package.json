@@ -2,13 +2,14 @@
   "name": "denote__obsidian",
   "version": "5.3.0",
   "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
-  "main": "main.js",
+  "main": "main.ts",
   "scripts": {
     "build": "tsc -noEmit -skipLibCheck && bun run esbuild.config.mjs production",
     "dev": "bun run esbuild.config.mjs",
-    "version": "make version",
+    "format:check": "prettier . --check",
     "format:fix": "prettier . --write",
-    "format:check": "prettier . --check"
+    "sync": "make install",
+    "version": "make version"
   },
   "keywords": [
     "denote",
