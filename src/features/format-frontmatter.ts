@@ -1,13 +1,21 @@
-import { TFile } from 'obsidian';
+import { App, TFile } from 'obsidian';
 import { format } from '@formkit/tempo';
 
 import {
+  IFrontMatter,
   getActiveFile,
   getFrontMatter,
   isMarkdownFile,
   setFrontMatter,
 } from 'src/obsidian';
-import { ctx, logger, toTitleCase } from 'src/lib';
+import {
+  TimeUnit,
+  areObjectEquals,
+  ctx,
+  logger,
+  msToFraction,
+  toTitleCase,
+} from 'src/lib';
 import { hasToSkipFile } from './exclude-files';
 
 export async function formatFrontMater(): Promise<void> {
@@ -45,6 +53,22 @@ export async function formatFrontMater(): Promise<void> {
   }
   let { value: frontMatter } = frontMatterResult;
 
+  const updatedFrontMatter = getUpdatedFrontMatter(
+    activeFile,
+    app,
+    structuredClone(frontMatter),
+  );
+
+  if (areObjectEquals(frontMatter, updatedFrontMatter)) return;
+
+  await setFrontMatter(activeFile, updatedFrontMatter);
+}
+
+function getUpdatedFrontMatter(
+  activeFile: TFile,
+  app: App,
+  frontMatter: IFrontMatter,
+): IFrontMatter {
   const predefinedTags: Record<string, string> = {
     Inbox: 'inbox',
     Projects: 'type/project',
@@ -78,7 +102,7 @@ export async function formatFrontMater(): Promise<void> {
     }
   }
 
-  await setFrontMatter(activeFile, frontMatter);
+  return frontMatter;
 }
 
 export function getFrontMatterId(file: TFile): string {
@@ -90,7 +114,16 @@ export function getFrontMatterCreatedAt(file: TFile): string {
 }
 
 export function getFrontMatterUpdatedAt(file: TFile): string {
-  return format(new Date(file.stat.mtime), 'YYYY-MM-DD, HH:mm:ss');
+  let time: number = file.stat.mtime;
+
+  const cachedMTime = ctx.getUpdatedAtCacheItem(file.path);
+  if (cachedMTime) {
+    const minTimeToUpdate = cachedMTime + msToFraction(1, TimeUnit.MINUTE);
+    if (minTimeToUpdate >= time) time = cachedMTime;
+  }
+
+  ctx.setUpdatedAtCacheItem(file.path, time);
+  return format(new Date(time), 'YYYY-MM-DD, HH:mm:ss');
 }
 
 export function sortTags(tags: string[]): string[] {

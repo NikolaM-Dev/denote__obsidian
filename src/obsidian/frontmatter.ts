@@ -48,4 +48,6 @@ export async function setFrontMatter(
       frontMatter[property] = value;
     });
   });
+
+  logger.debug({ msg: 'FrontMatter Updated' });
 }
