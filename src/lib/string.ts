@@ -33,35 +33,23 @@ export function toKebabCase(payload: string): string {
 }
 
 export function toTitleCase(payload: string): string {
-  const formattedTitle = trim(payload).toLowerCase();
+  const cleanedText = trim(payload).toLocaleLowerCase();
+  const words = cleanedText.split(/\b/);
 
-  // Split the string into words
-  const words = formattedTitle.split(/\s+/);
-
-  // Words to format with a specialFormat
   const specialWords: Record<string, string> = {
     ai: 'AI',
     jsdoc: 'JSDoc',
-    minecraft: 'MineCraft',
   };
 
-  const specialWordsKeys = Object.keys(specialWords);
-
   const formattedWords = words.map((word) => {
-    let capitalizedWord = toCapitalize(word);
-    for (const key of specialWordsKeys) {
-      if (word.includes(key)) {
-        capitalizedWord = word.replace(key, specialWords[key]);
+    if (specialWords[word]) return specialWords[word];
 
-        break;
-      }
-    }
-
-    return capitalizedWord;
+    return toCapitalize(word);
   });
 
-  // Join the words back together
-  return formattedWords.join(' ');
+  const formattedSentence = formattedWords.join('');
+
+  return formattedSentence;
 }
 
 export function toFileName(payload: string): string {
