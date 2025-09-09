@@ -70,7 +70,7 @@ function getUpdatedFrontMatter(
   frontMatter: IFrontMatter,
 ): IFrontMatter {
   const predefinedTags: Record<string, string> = {
-    Inbox: 'inbox',
+    Inbox: 'zk/fn',
     Projects: 'type/project',
     Resources: 'resource',
     Sources: 'zk/ln',
