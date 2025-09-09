@@ -1,10 +1,10 @@
 {
-  "id": "denote__obsidian",
-  "name": "Denote",
+  "id": "personalized-writing-environment__obsidian",
+  "name": "PWE: Personalized Writing Environment",
   "version": "5.6.0",
   "minAppVersion": "0.15.0",
   "description": "If you are seeing this, I just forget to change it",
-  "author": "NikolaM-Dev",
+  "author": "Juan David Merchan Torres (NikolaM-Dev)",
   "authorUrl": "https://github.com/NikolaM-Dev",
   "fundingUrl": "https://github.com/NikolaM-Dev",
   "isDesktopOnly": false
