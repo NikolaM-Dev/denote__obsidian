@@ -1,5 +1,5 @@
 {
-  "name": "denote__obsidian",
+  "name": "personalized-writing-environment__obsidian",
   "version": "5.6.0",
   "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
   "main": "main.ts",

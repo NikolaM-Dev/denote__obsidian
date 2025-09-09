@@ -1,3 +1,6 @@
+# ✍️ `PWE`: Personalized Writing Environment
+
+````md title="default-obsidian-plugin-template-docs"
 # Obsidian Sample Plugin
 
 This is a sample plugin for Obsidian (https://obsidian.md).
@@ -120,3 +123,4 @@ If you have multiple URLs, you can also do:
 ## API Documentation
 
 See https://github.com/obsidianmd/obsidian-api
+````
